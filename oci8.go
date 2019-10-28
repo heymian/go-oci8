@@ -122,7 +122,7 @@ func ParseDSN(dsnString string) (dsn *DSN, err error) {
 		}
 	}
 
-	if len(dsn.Username)+len(dsn.Password)+len(dsn.Connect) == 0 {
+	if len(dsn.Username)+len(dsn.Password) == 0 {
 		dsn.externalauthentication = true
 	}
 	return dsn, nil
@@ -276,7 +276,7 @@ func (oci8Driver *OCI8DriverStruct) Open(dsnString string) (driver.Conn, error) 
 		}
 		conn.srv = (*C.OCIServer)(*handle)
 
-		if dsn.externalauthentication {
+		if len(dsn.Connect) == 0 {
 			result = C.OCIServerAttach(
 				conn.srv,       // uninitialized server handle, which gets initialized by this call. Passing in an initialized server handle causes an error.
 				conn.errHandle, // error handle
